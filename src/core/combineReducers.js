@@ -10,7 +10,7 @@ export const combineReducers = reducers => {
 
     const finalReducerKeys = Object.keys(finalReducers);
 
-    return (state, action) => {
+    return (state = {}, action) => {
         let hasChanged = false;
         const nextState = {};
 
@@ -18,7 +18,6 @@ export const combineReducers = reducers => {
             const reducer = finalReducers[fk];
             const previousStateForKey = state[fk];
             const nextStateForKey = reducer(previousStateForKey, action);
-            
             nextState[fk] = nextStateForKey;
             hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
         }

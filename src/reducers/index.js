@@ -1,8 +1,6 @@
-export default function reducer(state, action) {
-    switch(action.type) {
-        case '':
-            return state
-        default:
-            return state;
-    }
-}
+import { combineReducers } from "../core/combineReducers.js";
+import counter from "./counter.js"
+
+export default combineReducers({
+    counter
+})
