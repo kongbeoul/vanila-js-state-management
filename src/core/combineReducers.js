@@ -1,28 +1,25 @@
 export const combineReducers = reducers => {
-    const keys = Object.keys(reducers);
-    const finalReducers = {};
-
-    for(let k of keys) {
-         if(typeof reducers[k] === "function") {
-            finalReducers[k] = reducers[k];
-        }
-    }
-
-    const finalReducerKeys = Object.keys(finalReducers);
+    const finalReducers = Object.keys(reducers).reduce((final, key) => {
+        if(typeof reducers[key] === "function") {
+            final[key] = reducers[key];
+        }        
+        return final;
+    }, {});
 
     return (state = {}, action) => {
-        let hasChanged = false;
+        let hasChanged;
         const nextState = {};
 
-        for(const fk of finalReducerKeys) {
-            const reducer = finalReducers[fk];
-            const previousStateForKey = state[fk];
+        for(const key of Object.keys(finalReducers)) {
+            const reducer = finalReducers[key];
+            const previousStateForKey = state[key];
             const nextStateForKey = reducer(previousStateForKey, action);
-            nextState[fk] = nextStateForKey;
+            
+            nextState[key] = nextStateForKey;
             hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
         }
-
-        hasChanged = hasChanged || finalReducerKeys.length !== Object.keys(state).length;
+        
+        hasChanged = hasChanged || finalReducers.length !== Object.keys(state).length;
 
         return hasChanged ? nextState : state;
     }

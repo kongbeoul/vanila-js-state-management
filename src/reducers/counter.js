@@ -1,8 +1,5 @@
-const INCREMENT = 'counter/INCREMENT';
-const DECREMENT = 'counter/DECREMENT';
-
-export const increment = payload => ({ type: INCREMENT, payload })
-export const decrement = payload => ({ type: DECREMENT, payload })
+export const INCREMENT = 'counter/INCREMENT';
+export const DECREMENT = 'counter/DECREMENT';
 
 export default function reducer(state = 0, action) {
     switch(action.type) {

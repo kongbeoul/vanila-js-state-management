@@ -1,11 +1,17 @@
-import { increment, decrement } from "./reducers/counter.js";
+import { bindActionCreators } from "./core/bindActionCreators.js";
+import { INCREMENT, DECREMENT } from "./reducers/counter.js";
 
 export default function App($app, store) {
     this.$app = $app;
-    this.$store = store;
+    const { getState, dispatch, subscribe } = store;
+
+    this.boundActionCreators = bindActionCreators({
+        [INCREMENT]: payload => ({ type: INCREMENT, payload }),
+        [DECREMENT]: payload => ({ type: DECREMENT, payload })
+    }, dispatch);
 
     this.render = function render() {
-        const { counter } = this.$store.getState();
+        const { counter } = getState();
         
         this.$app.innerHTML = `
             <button type="button" class="increment"> + </button>
@@ -17,10 +23,11 @@ export default function App($app, store) {
     }
 
     this.mounted = function mounted() {
-        this.$app.querySelector(".increment").addEventListener("click", () => this.$store.dispatch(increment()));
-        this.$app.querySelector(".decrement").addEventListener("click", () => this.$store.dispatch(decrement()));
+        this.$app.querySelector(".increment").addEventListener("click", this.boundActionCreators[INCREMENT]);
+        this.$app.querySelector(".decrement").addEventListener("click", this.boundActionCreators[DECREMENT]);
     }
 
-    this.$store.subscribe(this.render.bind(this));
+    subscribe(this.render.bind(this));
+    
     this.render();
 }
