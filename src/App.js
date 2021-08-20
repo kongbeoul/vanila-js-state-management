@@ -1,33 +1,18 @@
-import { bindActionCreators } from "./core/bindActionCreators.js";
-import { INCREMENT, DECREMENT } from "./reducers/counter.js";
+import Counter from "./components/Counter.js";
 
-export default function App($app, store) {
-    this.$app = $app;
-    const { getState, dispatch, subscribe } = store;
-
-    this.boundActionCreators = bindActionCreators({
-        [INCREMENT]: payload => ({ type: INCREMENT, payload }),
-        [DECREMENT]: payload => ({ type: DECREMENT, payload })
-    }, dispatch);
-
-    this.render = function render() {
-        const { counter } = getState();
+export default class App {
+    constructor($app, store) {
+        this.$app = $app;
+        this.$store = store;
+        this.init();
+    }
+    init() {
+        this.counter = new Counter(this.$app, this.$store);
         
-        this.$app.innerHTML = `
-            <button type="button" class="increment"> + </button>
-            <button type="button" class="decrement"> - </button>
-            ${counter}
-        `;
-
-        this.mounted();
+        this.$store.subscribe(this.render.bind(this));
+        this.render();
     }
-
-    this.mounted = function mounted() {
-        this.$app.querySelector(".increment").addEventListener("click", this.boundActionCreators[INCREMENT]);
-        this.$app.querySelector(".decrement").addEventListener("click", this.boundActionCreators[DECREMENT]);
+    render() {
+        this.counter.render();
     }
-
-    subscribe(this.render.bind(this));
-    
-    this.render();
 }
