@@ -8,9 +8,8 @@ export default class App {
     }
     init() {
         this.counter = new Counter(this.$app, this.$store);
-        
-        this.$store.subscribe(this.render.bind(this));
         this.render();
+        this.$store.subscribe(this.render.bind(this));
     }
     render() {
         this.counter.render();
