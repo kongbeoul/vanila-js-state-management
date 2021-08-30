@@ -1,6 +1,6 @@
 import Component from "../core/components.js";
 import { bindActionCreators } from "../core/bindActionCreators.js";
-import { increment, decrement } from "../reducers/counter.js";
+import { INCREMENT, DECREMENT } from "../reducers/counter.js";
 
 export default class Counter extends Component {
     constructor($app, store) {
@@ -15,8 +15,8 @@ export default class Counter extends Component {
         const { dispatch } = this.$store;
 
         this.boundActionCreators = bindActionCreators({
-            increment,
-            decrement
+            [INCREMENT]: payload => ({ type: INCREMENT, payload }),
+            [DECREMENT]: payload => ({ type: DECREMENT, payload })
         }, dispatch)
     }
     render() {
@@ -34,7 +34,7 @@ export default class Counter extends Component {
     mounted() {
         const { $target, boundActionCreators } = this;
 
-        $target.querySelector(".increment").addEventListener("click", boundActionCreators['increment']);
-        $target.querySelector(".decrement").addEventListener("click", boundActionCreators['decrement']);
+        $target.querySelector(".increment").addEventListener("click", () => boundActionCreators[INCREMENT]());
+        $target.querySelector(".decrement").addEventListener("click", () => boundActionCreators[DECREMENT]());
     }
 }
