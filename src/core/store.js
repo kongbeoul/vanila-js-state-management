@@ -6,7 +6,10 @@ export const createStore = (reducer, preloadState) => {
 
     const getState = () => ({ ...state });
 
-    const subscribe = fn => listeners.add(fn);
+    const subscribe = fn => {
+        listeners.add(fn);
+        return () => listeners.delete(fn);
+    };
 
     const dispatch = action => {
         state = reducer(state, action);

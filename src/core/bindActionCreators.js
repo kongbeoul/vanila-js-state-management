@@ -1,6 +1,6 @@
 const bindActionCreator = (actionCreator, dispatch) => {
     return (...args) => {
-        dispatch(actionCreator.apply(this, ...args))
+        dispatch(actionCreator.apply(this, args))
     }
 }
 
