@@ -1,8 +1,6 @@
 export default class Component {    
-    constructor(props) {
-        this.props = props;
-        this.state = {};
-    }
+    state = {}
+
     setState(nextState) {
         if(this.state !== nextState) {
             this.state = nextState;
@@ -12,13 +10,6 @@ export default class Component {
         this.mounted();
     }
     init() {}
-    render(nextProps) { 
-        if(this.props !== nextProps) {
-            this.props = {
-                ...this.props,
-                nextProps
-            }
-        }
-    }
+    render() {}
     mounted() {}
 }

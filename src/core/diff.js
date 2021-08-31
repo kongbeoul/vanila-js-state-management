@@ -2,37 +2,26 @@ function diffAttributes(oldNode, newNode) {
     const oldProps = [ ...oldNode.attributes ];
 	const newProps = [ ...newNode.attributes ];
 
-	for (const {name, value} of newProps) {
+	for (const { name, value } of newProps) {
 	  if (value === oldNode.getAttribute(name)) continue;
 	  oldNode.setAttribute(name, value);
 	}
 	
-	for (const {name} of oldProps) {
+	for (const { name } of oldProps) {
 	  if (newNode.getAttribute(name) !== undefined) continue;
 	  oldNode.removeAttribute(name);
 	}
 }
 
 export default function diff(parent, newNode, oldNode) {
-    if (!newNode && oldNode) {
-        return oldNode.remove();
-    }
-    if (newNode && !oldNode) {
-        return parent.appendChild(newNode);
-    }
-
-    if (
-        newNode instanceof Text && oldNode instanceof Text
-    ) {
+    if (!newNode && oldNode) return oldNode.remove();
+    if (newNode && !oldNode) return parent.appendChild(newNode);
+    if (newNode instanceof Text && oldNode instanceof Text) {
         if (oldNode.nodeValue === newNode.nodeValue) return;
         oldNode.nodeValue = newNode.nodeValue
         return;
     }
-
-    if (newNode.nodeName !== oldNode.nodeName) {
-        return parent.replaceChild(newNode, oldNode)
-    }
-
+    if (newNode.nodeName !== oldNode.nodeName) return parent.replaceChild(newNode, oldNode)
     diffAttributes(oldNode, newNode);
 
     const newChildren = [ ...newNode.childNodes ]; 

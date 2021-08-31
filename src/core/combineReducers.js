@@ -19,7 +19,7 @@ export const combineReducers = reducers => {
             hasChanged = hasChanged || nextStateForKey !== previousStateForKey;
         }
         
-        hasChanged = hasChanged || finalReducers.length !== Object.keys(state).length;
+        hasChanged = hasChanged || Object.keys(finalReducers).length !== Object.keys(state).length;
 
         return hasChanged ? nextState : state;
     }
