@@ -1,5 +1,7 @@
 import Counter from "./components/Counter.js";
 import Post from "./components/Post.js";
+
+import { increment, decrement } from "./reducers/counter.js";
 import { getPostsAPI } from "./api/posts.js"
 
 export default class App {
@@ -9,8 +11,20 @@ export default class App {
         this.init();
     }
     init() {
-        this.counter = new Counter(this.$app, this.$store);
-        this.post = new Post(this.$app, this.$store);
+        const { dispatch, getState } = this.$store;
+        const state = getState();
+
+        this.counter = new Counter(this.$app, {
+            counter: state.counter,
+            onIncrement: payload => dispatch(increment(payload)),
+            onDecrement: payload => dispatch(decrement(payload))
+        })
+
+        this.post = new Post(this.$app, {
+            isLoading: state.post.isLoading,
+            errorMsg: state.post.errorMsg,
+            posts: []
+        });
 
         this.render();
         this.$store.subscribe(this.render.bind(this));
@@ -18,10 +32,17 @@ export default class App {
         this.mounted();
     }
     render() {
-        this.counter.render();
-        this.post.render();
+        const state = this.$store.getState();
+
+        this.counter.render({ counter: state.counter });
+
+        this.post.render({
+            isLoading: state.post.isLoading,
+            errorMsg: state.post.errorMsg,
+            posts: state.post.posts
+        });
     }
-    async mounted() {
+    mounted() {
         getPostsAPI(this.$store.dispatch);
     }
 }

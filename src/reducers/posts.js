@@ -2,6 +2,10 @@ export const GET_POST = 'post/GET_POST';
 export const GET_POST_SUCCESS = 'post/GET_POST_SUCCESS';
 export const GET_POST_FAILURE = 'post/GET_POST_FAILURE';
 
+export const getPost = () => ({ type: GET_POST });
+export const getPostSuccess = payload => ({ type: GET_POST_SUCCESS, payload });
+export const getPostFailure = payload => ({ type: GET_POST_FAILURE, payload })
+
 const initialState = {
     isLoading: false,
     posts: [],

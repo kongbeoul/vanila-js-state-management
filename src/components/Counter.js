@@ -1,35 +1,26 @@
 import Component from "../core/components.js";
-import { bindActionCreators } from "../core/bindActionCreators.js";
-import { INCREMENT, DECREMENT } from "../reducers/counter.js";
 import diff from "../core/diff.js";
 
 export default class Counter extends Component {
-    constructor($app, store) {
-        super();
+    constructor($app, props = {}) {
+        super(props);
         this.$target = document.createElement("div");
-        this.$store = store;
         $app.appendChild(this.$target);
-        
-        this.init();
     }    
-    init() {
-        const { dispatch } = this.$store;
+    render(nextProps) {
+        if(nextProps) {
+            this.props = {
+                ...this.props,
+                ...nextProps
+            }
+        }
 
-        this.boundActionCreators = bindActionCreators({
-            [INCREMENT]: payload => ({ type: INCREMENT, payload }),
-            [DECREMENT]: payload => ({ type: DECREMENT, payload })
-        }, dispatch);
-    }
-    render() {
-        const { getState } = this.$store;
-        const { counter } = getState();
-        
         const newNode = this.$target.cloneNode(true);
 
         newNode.innerHTML = `
             <button type="button" class="increment"> + </button>
             <button type="button" class="decrement"> - </button>
-            ${counter}
+            ${this.props.counter}
         `.trim();
                
         const oldChildNodes = [...this.$target.childNodes ];
@@ -43,12 +34,13 @@ export default class Counter extends Component {
         this.mounted();
     }
     mounted() {
-        const { $target, boundActionCreators } = this;
+        const { $target } = this;
+        const { onIncrement, onDecrement } = this.props;
 
-        $target.querySelector(".increment").removeEventListener("click",  boundActionCreators[INCREMENT]);
-        $target.querySelector(".decrement").removeEventListener("click", boundActionCreators[DECREMENT]);
+        $target.querySelector(".increment").removeEventListener("click", onIncrement);
+        $target.querySelector(".decrement").removeEventListener("click", onDecrement);
 
-        $target.querySelector(".increment").addEventListener("click", boundActionCreators[INCREMENT]);
-        $target.querySelector(".decrement").addEventListener("click", boundActionCreators[DECREMENT]);
+        $target.querySelector(".increment").addEventListener("click", onIncrement);
+        $target.querySelector(".decrement").addEventListener("click", onDecrement);
     }
 }

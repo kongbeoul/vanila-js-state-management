@@ -2,18 +2,22 @@ import Component from "../core/components.js";
 import diff from "../core/diff.js";
 
 export default class Post extends Component {
-    constructor($app, $store) {
-        super();
-        this.$target = document.createElement("div");
-        this.$store = $store;
+    constructor($app, props) {
+        super(props);
+        this.$target = document.createElement("div");        
         $app.appendChild(this.$target);
     }
-    render() {
-        const { getState } = this.$store;
-        const { post } = getState()
-        const newNode = this.$target.cloneNode(true);
+    render(nextProps) {
+        if(nextProps) {
+            this.props = {
+                ...this.props,
+                ...nextProps
+            }
+        }
 
-        newNode.innerHTML = post.posts.map(post => {
+        const newNode = this.$target.cloneNode(true);
+        
+        newNode.innerHTML = this.props.posts.map(post => {
             const { userId, title, body} = post; 
             return `
                 <span>${userId}</span>
