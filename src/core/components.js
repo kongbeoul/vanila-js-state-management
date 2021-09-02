@@ -4,7 +4,7 @@ export default class Component {
         this.props = props;
     }
     setState(nextState) {
-        if(this.state !== nextState) {
+        if(nextState && this.state !== nextState) {
             this.state = nextState;
             return false;
         }
